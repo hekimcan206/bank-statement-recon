@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BankRecon.Core/BankRecon.Core.csproj" />
+  </Folder>
+</Solution>

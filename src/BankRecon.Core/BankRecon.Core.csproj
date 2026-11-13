@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Streaming MT940 and camt.053 readers and writers, reference similarity and the rule-based matching engine. No I/O beyond the streams it is given, no clocks.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="BankRecon.UnitTests" />
+  </ItemGroup>
+
+</Project>
