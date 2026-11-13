@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic camt.053.001.02 statement: status as plain text, party names directly under Dbtr/Cdtr,
+     transaction amounts under AmtDtls/TxAmt, account identified by Othr/Id. -->
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>SYNTH-20261112-0002</MsgId>
+      <CreDtTm>2026-11-13T05:30:00</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>STMT-20261112-EUR</Id>
+      <LglSeqNb>88</LglSeqNb>
+      <Acct>
+        <Id><Othr><Id>99990000-0001234567</Id></Othr></Id>
+        <Ccy>EUR</Ccy>
+      </Acct>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>PRCD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">2000.00</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Dt><Dt>2026-11-11</Dt></Dt>
+      </Bal>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>CLBD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">1312.40</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt><Dt>2026-11-12</Dt></Dt>
+      </Bal>
+      <Ntry>
+        <NtryRef>PAY-0001</NtryRef>
+        <Amt Ccy="EUR">3500.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-11-12</Dt></BookgDt>
+        <ValDt><Dt>2026-11-12</Dt></ValDt>
+        <AcctSvcrRef>EUR26316A01</AcctSvcrRef>
+        <BkTxCd><Domn><Cd>PMNT</Cd><Fmly><Cd>RCDT</Cd><SubFmlyCd>ESCT</SubFmlyCd></Fmly></Domn></BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs><EndToEndId>SO-2026-TR-0012345-01</EndToEndId></Refs>
+            <AmtDtls><TxAmt><Amt Ccy="EUR">3500.00</Amt></TxAmt></AmtDtls>
+            <RltdPties>
+              <Dbtr><Nm>Synth Handel GmbH</Nm></Dbtr>
+              <DbtrAcct><Id><IBAN>DE96999900000001234567</IBAN></Id></DbtrAcct>
+            </RltdPties>
+            <RmtInf><Strd><CdtrRefInf><Ref>RF18539007547034</Ref></CdtrRefInf></Strd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <Amt Ccy="EUR">187.60</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-11-12</Dt></BookgDt>
+        <ValDt><Dt>2026-11-13</Dt></ValDt>
+        <BkTxCd><Prtry><Cd>NCHG</Cd></Prtry></BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <RltdPties>
+              <Cdtr><Nm>Synth Leasing BV</Nm></Cdtr>
+            </RltdPties>
+            <RmtInf><Ustrd>LEASE NOV 2026</Ustrd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

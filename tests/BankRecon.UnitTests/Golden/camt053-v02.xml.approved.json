@@ -1,0 +1,65 @@
+[
+  {
+    "Header": {
+      "Format": "camt.053.001.02",
+      "StatementId": "STMT-20261112-EUR",
+      "SequenceNumber": "88",
+      "Account": "99990000-0001234567",
+      "Currency": "EUR",
+      "Opening": {
+        "Mark": "Debit",
+        "Date": "2026-11-11",
+        "Currency": "EUR",
+        "Amount": 2000.00,
+        "SignedAmount": -2000.00
+      },
+      "Closing": {
+        "Mark": "Credit",
+        "Date": "2026-11-12",
+        "Currency": "EUR",
+        "Amount": 1312.40,
+        "SignedAmount": 1312.40
+      },
+      "CreatedAt": "2026-11-13T05:30:00+00:00"
+    },
+    "Entries": [
+      {
+        "ValueDate": "2026-11-12",
+        "BookingDate": "2026-11-12",
+        "Mark": "Credit",
+        "IsReversal": false,
+        "Amount": 3500.00,
+        "TransactionType": "PMNT/RCDT/ESCT",
+        "CustomerReference": "PAY-0001",
+        "BankReference": "EUR26316A01",
+        "Remittance": "RF18539007547034",
+        "CounterpartyName": "Synth Handel GmbH",
+        "CounterpartyIban": "DE96999900000001234567",
+        "EndToEndId": "SO-2026-TR-0012345-01",
+        "Details": [],
+        "SignedAmount": 3500.00
+      },
+      {
+        "ValueDate": "2026-11-13",
+        "BookingDate": "2026-11-12",
+        "Mark": "Debit",
+        "IsReversal": false,
+        "Amount": 187.60,
+        "TransactionType": "NCHG",
+        "Remittance": "LEASE NOV 2026",
+        "CounterpartyName": "Synth Leasing BV",
+        "Details": [],
+        "SignedAmount": -187.60
+      }
+    ],
+    "Closing": {
+      "Mark": "Credit",
+      "Date": "2026-11-12",
+      "Currency": "EUR",
+      "Amount": 1312.40,
+      "SignedAmount": 1312.40
+    },
+    "ComputedClosing": 1312.40,
+    "IsBalanced": true
+  }
+]

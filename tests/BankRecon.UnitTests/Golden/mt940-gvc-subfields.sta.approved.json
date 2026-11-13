@@ -1,0 +1,60 @@
+[
+  {
+    "Header": {
+      "Format": "MT940",
+      "StatementId": "STARTUMS",
+      "SequenceNumber": "1/1",
+      "Account": "99990000/1234567",
+      "Currency": "EUR",
+      "Opening": {
+        "Mark": "Credit",
+        "Date": "2026-12-31",
+        "Currency": "EUR",
+        "Amount": 10000,
+        "SignedAmount": 10000
+      }
+    },
+    "Entries": [
+      {
+        "ValueDate": "2026-12-31",
+        "BookingDate": "2027-01-02",
+        "Mark": "Credit",
+        "IsReversal": false,
+        "Amount": 250,
+        "FundsCode": "R",
+        "TransactionType": "NTRF",
+        "BankReference": "BANKREF0001",
+        "Narrative": "166?00GUTSCHRIFT?100599?20EREF+INV-2026-000777?21SVWZ+RECHNUNG INV-2026-0007?2277 DANKE?30SYNTDEFFXXX?31DE15999900000007654321?32MUSTERFIRMA SYNTH GMBH",
+        "Remittance": "RECHNUNG INV-2026-000777 DANKE",
+        "CounterpartyName": "MUSTERFIRMA SYNTH GMBH",
+        "CounterpartyIban": "DE15999900000007654321",
+        "EndToEndId": "INV-2026-000777",
+        "Details": [],
+        "SignedAmount": 250
+      },
+      {
+        "ValueDate": "2027-01-02",
+        "Mark": "Debit",
+        "IsReversal": false,
+        "Amount": 99.95,
+        "TransactionType": "NDDT",
+        "BankReference": "BANKREF0002",
+        "Narrative": "105?00LASTSCHRIFT?20EREF+SUB-2027-01?21SVWZ+ABO JANUAR?32SYNTH TELEKOM",
+        "Remittance": "ABO JANUAR",
+        "CounterpartyName": "SYNTH TELEKOM",
+        "EndToEndId": "SUB-2027-01",
+        "Details": [],
+        "SignedAmount": -99.95
+      }
+    ],
+    "Closing": {
+      "Mark": "Credit",
+      "Date": "2027-01-02",
+      "Currency": "EUR",
+      "Amount": 10150.05,
+      "SignedAmount": 10150.05
+    },
+    "ComputedClosing": 10150.05,
+    "IsBalanced": true
+  }
+]

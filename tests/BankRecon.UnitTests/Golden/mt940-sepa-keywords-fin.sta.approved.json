@@ -1,0 +1,89 @@
+[
+  {
+    "Header": {
+      "Format": "MT940",
+      "StatementId": "940S261106",
+      "SequenceNumber": "1",
+      "Account": "SYNTTRIS/TR649990100000001000000002",
+      "Iban": "TR649990100000001000000002",
+      "Currency": "TRY",
+      "Opening": {
+        "Mark": "Credit",
+        "Date": "2026-11-05",
+        "Currency": "TRY",
+        "Amount": 5000,
+        "SignedAmount": 5000
+      }
+    },
+    "Entries": [
+      {
+        "ValueDate": "2026-11-06",
+        "BookingDate": "2026-11-06",
+        "Mark": "Credit",
+        "IsReversal": false,
+        "Amount": 1500,
+        "TransactionType": "NTRF",
+        "CustomerReference": "E2E-901",
+        "BankReference": "TRX0001",
+        "Narrative": "/TRTP/SEPA OVERBOEKING/IBAN/TR299990100000005000000011/BIC/SYNTTRISXXX/NAME/EGE MAKINE AS/REMI/USTD//INV-2026-000901 KASIM/EREF/E2E-901",
+        "Remittance": "INV-2026-000901 KASIM",
+        "CounterpartyName": "EGE MAKINE AS",
+        "CounterpartyIban": "TR299990100000005000000011",
+        "EndToEndId": "E2E-901",
+        "Details": [],
+        "SignedAmount": 1500
+      },
+      {
+        "ValueDate": "2026-11-06",
+        "BookingDate": "2026-11-06",
+        "Mark": "Debit",
+        "IsReversal": false,
+        "Amount": 300.5,
+        "TransactionType": "NTRF",
+        "BankReference": "TRX0002",
+        "Narrative": "/TRTP/SEPA OVERBOEKING/IBAN/TR029990100000005000000012/NAME/TOROS ENERJI LTD STI/REMI/USTD//ELEKTRIK FATURASI EKIM",
+        "Remittance": "ELEKTRIK FATURASI EKIM",
+        "CounterpartyName": "TOROS ENERJI LTD STI",
+        "CounterpartyIban": "TR029990100000005000000012",
+        "Details": [],
+        "SignedAmount": -300.5
+      }
+    ],
+    "Closing": {
+      "Mark": "Credit",
+      "Date": "2026-11-06",
+      "Currency": "TRY",
+      "Amount": 6199.5,
+      "SignedAmount": 6199.5
+    },
+    "ComputedClosing": 6199.5,
+    "IsBalanced": true
+  },
+  {
+    "Header": {
+      "Format": "MT940",
+      "StatementId": "940S261107",
+      "SequenceNumber": "2",
+      "Account": "SYNTTRIS/TR649990100000001000000002",
+      "Iban": "TR649990100000001000000002",
+      "Currency": "TRY",
+      "Opening": {
+        "Mark": "Credit",
+        "Date": "2026-11-06",
+        "Currency": "TRY",
+        "Amount": 6199.5,
+        "SignedAmount": 6199.5
+      }
+    },
+    "Entries": [],
+    "Closing": {
+      "Mark": "Credit",
+      "Date": "2026-11-07",
+      "Currency": "TRY",
+      "Amount": 6199.5,
+      "SignedAmount": 6199.5
+    },
+    "ComputedClosing": 6199.5,
+    "IsBalanced": true
+  }
+]

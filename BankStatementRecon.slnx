@@ -3,4 +3,7 @@
     <Project Path="src/BankRecon.Core/BankRecon.Core.csproj" />
     <Project Path="src/BankRecon.Synthetic/BankRecon.Synthetic.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BankRecon.UnitTests/BankRecon.UnitTests.csproj" />
+  </Folder>
 </Solution>

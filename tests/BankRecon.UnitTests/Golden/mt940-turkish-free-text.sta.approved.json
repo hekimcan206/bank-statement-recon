@@ -1,0 +1,131 @@
+[
+  {
+    "Header": {
+      "Format": "MT940",
+      "StatementId": "STM20261104",
+      "SequenceNumber": "00305/001",
+      "Account": "TR919990100000001000000001",
+      "Iban": "TR919990100000001000000001",
+      "Currency": "TRY",
+      "Opening": {
+        "Mark": "Credit",
+        "Date": "2026-11-03",
+        "Currency": "TRY",
+        "Amount": 125000,
+        "SignedAmount": 125000
+      }
+    },
+    "Entries": [
+      {
+        "ValueDate": "2026-11-04",
+        "BookingDate": "2026-11-04",
+        "Mark": "Credit",
+        "IsReversal": false,
+        "Amount": 18450.75,
+        "TransactionType": "NTRF",
+        "CustomerReference": "INV-2026-000123",
+        "BankReference": "FT26308000001",
+        "Narrative": "EFT GELEN ŞİMŞEK GIDA LTD ŞTİ FATURA INV-2026-000123",
+        "Remittance": "EFT GELEN ŞİMŞEK GIDA LTD ŞTİ FATURA INV-2026-000123",
+        "Details": [],
+        "SignedAmount": 18450.75
+      },
+      {
+        "ValueDate": "2026-11-04",
+        "Mark": "Credit",
+        "IsReversal": false,
+        "Amount": 2500,
+        "TransactionType": "NTRF",
+        "BankReference": "FT26308000002",
+        "Narrative": "HAVALE GELEN ÇINAR LOJİSTİK A.Ş. TOPLU ODEME KASIM",
+        "Remittance": "HAVALE GELEN ÇINAR LOJİSTİK A.Ş. TOPLU ODEME KASIM",
+        "Details": [],
+        "SignedAmount": 2500
+      },
+      {
+        "ValueDate": "2026-11-04",
+        "Mark": "Debit",
+        "IsReversal": false,
+        "Amount": 45,
+        "TransactionType": "NCHG",
+        "BankReference": "FT26308000003",
+        "Narrative": "HESAP ISLETIM UCRETI",
+        "Remittance": "HESAP ISLETIM UCRETI",
+        "Details": [],
+        "SignedAmount": -45
+      }
+    ],
+    "Closing": {
+      "Mark": "Credit",
+      "Date": "2026-11-04",
+      "Currency": "TRY",
+      "Amount": 145905.75,
+      "SignedAmount": 145905.75
+    },
+    "ClosingAvailable": {
+      "Mark": "Credit",
+      "Date": "2026-11-04",
+      "Currency": "TRY",
+      "Amount": 145905.75,
+      "SignedAmount": 145905.75
+    },
+    "ComputedClosing": 145905.75,
+    "IsBalanced": true
+  },
+  {
+    "Header": {
+      "Format": "MT940",
+      "StatementId": "STM20261105",
+      "SequenceNumber": "00306/001",
+      "Account": "TR919990100000001000000001",
+      "Iban": "TR919990100000001000000001",
+      "Currency": "TRY",
+      "Opening": {
+        "Mark": "Credit",
+        "Date": "2026-11-04",
+        "Currency": "TRY",
+        "Amount": 145905.75,
+        "SignedAmount": 145905.75
+      }
+    },
+    "Entries": [
+      {
+        "ValueDate": "2026-11-05",
+        "BookingDate": "2026-11-05",
+        "Mark": "Credit",
+        "IsReversal": false,
+        "Amount": 7320.4,
+        "TransactionType": "NTRF",
+        "CustomerReference": "SO/2026/TR/00123",
+        "BankReference": "FT26309000004",
+        "Narrative": "FAST GELEN ANADOLU TEKSTİL SAN. VE TİC. A.Ş. SO/2026/TR/0012345/01 ODEMESI",
+        "Remittance": "FAST GELEN ANADOLU TEKSTİL SAN. VE TİC. A.Ş. SO/2026/TR/0012345/01 ODEMESI",
+        "Details": [],
+        "SignedAmount": 7320.4
+      },
+      {
+        "ValueDate": "2026-11-05",
+        "BookingDate": "2026-11-05",
+        "Mark": "Debit",
+        "IsReversal": true,
+        "Amount": 1200,
+        "TransactionType": "NTRF",
+        "BankReference": "FT26309000005",
+        "SupplementaryDetails": "HATALI ALACAK DUZELTMESI",
+        "Narrative": "IADE - HATALI ALACAK KAYDI",
+        "Remittance": "IADE - HATALI ALACAK KAYDI",
+        "Details": [],
+        "SignedAmount": -1200
+      }
+    ],
+    "Closing": {
+      "Mark": "Credit",
+      "Date": "2026-11-05",
+      "Currency": "TRY",
+      "Amount": 152026.15,
+      "SignedAmount": 152026.15
+    },
+    "ComputedClosing": 152026.15,
+    "IsBalanced": true
+  }
+]
