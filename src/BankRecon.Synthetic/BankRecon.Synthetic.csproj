@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Seeded generator for synthetic bank statements, ledger items and the ground truth that links them. No real bank data.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BankRecon.Core\BankRecon.Core.csproj" />
+  </ItemGroup>
+
+</Project>
