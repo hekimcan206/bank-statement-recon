@@ -90,6 +90,11 @@ public static class Mt940Reader
 
         FlushField();
         state.EndMessage(output, lines.LineNumber);
+        if (state.MessagesStarted == 0)
+        {
+            throw new StatementFormatException("No MT940 statement (:20: field) found");
+        }
+
         foreach (var part in Drain())
         {
             yield return part;
@@ -170,6 +175,8 @@ public static class Mt940Reader
         private decimal _running;
         private long _messageStartLine;
 
+        public int MessagesStarted { get; private set; }
+
         public void OnField(string tag, string value, long line, List<StatementPart> output)
         {
             switch (tag)
@@ -182,6 +189,7 @@ public static class Mt940Reader
                     }
 
                     _statementId = RequireText(value, tag, line, 35);
+                    MessagesStarted++;
                     _messageStartLine = line;
                     break;
                 case "21":

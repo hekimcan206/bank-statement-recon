@@ -88,6 +88,7 @@ public static class Camt053Reader
         private int _containerDepth;
         private DateTimeOffset? _groupCreatedAt;
         private StatementState? _stmt;
+        private int _statements;
 
         public StatementPart? Next()
         {
@@ -194,6 +195,7 @@ public static class Camt053Reader
                         }
 
                         _stmt = new StatementState(reader.Depth);
+                        _statements++;
                         reader.Read();
                         return;
                     }
@@ -214,6 +216,11 @@ public static class Camt053Reader
             // Read to the end so trailing garbage or an unclosed root is reported instead of ignored.
             while (reader.Read())
             {
+            }
+
+            if (_statements == 0)
+            {
+                throw new StatementFormatException("camt.053 document without any Stmt");
             }
 
             _done = true;
