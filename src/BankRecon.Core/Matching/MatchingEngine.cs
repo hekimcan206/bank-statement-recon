@@ -21,6 +21,9 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
         "gmbh", "bv", "co", "llc", "plc",
     };
 
+    private const int MaxCustomerReferenceLength = 16;
+    private const double ContradictingName = 0.3;
+
     private readonly MatchingOptions _options = options ?? new MatchingOptions();
 
     public MatchingOptions Options => _options;
@@ -64,7 +67,7 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
             LedgerSide? best = null;
             var bestDays = int.MaxValue;
             var tie = false;
-            foreach (var ledger in run.LedgersNear(bank.Line.Currency, bank.Line.ValueDate, _options.DateWindowDays))
+            foreach (var ledger in run.LedgersNear(bank.Line.Currency, bank.Line.ValueDate, _options.ReferenceWindowDays))
             {
                 if (ledger.Used || ledger.Item.Amount != bank.Line.Amount || !ContainsReference(bank, ledger))
                 {
@@ -108,23 +111,42 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
                 continue;
             }
 
-            var only = Single(run.LedgersNear(bank.Line.Currency, bank.Line.ValueDate, _options.DateWindowDays)
-                .Where(l => !l.Used && l.Item.Amount == bank.Line.Amount));
+            var sameAmount = run.LedgersNear(bank.Line.Currency, bank.Line.ValueDate, _options.DateWindowDays)
+                .Where(l => !l.Used && l.Item.Amount == bank.Line.Amount).ToList();
+            if (sameAmount.Count == 0)
+            {
+                continue;
+            }
+
+            // First: the amount is unique in the window. Otherwise: unique among items of this counterparty.
+            var byCounterparty = false;
+            var only = sameAmount.Count == 1 ? sameAmount[0] : null;
+            if (only is null)
+            {
+                only = Single(sameAmount.Where(l => NameScore(bank, l) >= _options.CounterpartyThreshold));
+                byCounterparty = only is not null;
+            }
+
             if (only is null)
             {
                 continue;
             }
 
-            var reverse = Single(run.BanksNear(bank.Line.Currency, only.Item.ExpectedDate, _options.DateWindowDays)
-                .Where(b => !b.Used && b.Line.Amount == only.Item.Amount));
-            if (!ReferenceEquals(reverse, bank))
+            var reverseCandidates = run.BanksNear(bank.Line.Currency, only.Item.ExpectedDate, _options.DateWindowDays)
+                .Where(b => !b.Used && b.Line.Amount == only.Item.Amount);
+            if (byCounterparty)
+            {
+                reverseCandidates = reverseCandidates.Where(b => NameScore(b, only) >= _options.CounterpartyThreshold);
+            }
+
+            if (!ReferenceEquals(Single(reverseCandidates), bank))
             {
                 continue;
             }
 
             // Unique amounts are strong evidence, but not against a counterparty that is clearly someone else.
             var name = NameScore(bank, only);
-            if (name is < 0.3)
+            if (name is < ContradictingName)
             {
                 continue;
             }
@@ -133,9 +155,11 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
                 MatchRule.AmountDate,
                 [bank.Line.Id],
                 [only.Item.Id],
-                0.85,
+                byCounterparty ? 0.8 : 0.85,
                 0m,
-                $"only candidate in both directions: amount {Money(bank.Line.Amount)} equal, value date {Days(bank, only)}"),
+                byCounterparty
+                    ? $"only item of this counterparty with amount {Money(bank.Line.Amount)} in the window, both directions; value date {Days(bank, only)}"
+                    : $"only candidate in both directions: amount {Money(bank.Line.Amount)} equal, value date {Days(bank, only)}"),
                 [bank],
                 [only]);
         }
@@ -221,7 +245,7 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
                 continue;
             }
 
-            var related = run.LedgersNear(bank.Line.Currency, bank.Line.ValueDate, _options.DateWindowDays)
+            var related = run.LedgersNear(bank.Line.Currency, bank.Line.ValueDate, _options.GroupWindowDays)
                 .Where(l => !l.Used && Math.Sign(l.Item.Amount) == Math.Sign(bank.Line.Amount) &&
                             Math.Abs(l.Item.Amount) < Math.Abs(bank.Line.Amount))
                 .Select(l => (Ledger: l, Relation: Relation(bank, l)))
@@ -273,7 +297,7 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
                 continue;
             }
 
-            var related = run.BanksNear(ledger.Item.Currency, ledger.Item.ExpectedDate, _options.DateWindowDays * 2)
+            var related = run.BanksNear(ledger.Item.Currency, ledger.Item.ExpectedDate, _options.GroupWindowDays)
                 .Where(b => !b.Used && Math.Sign(b.Line.Amount) == Math.Sign(ledger.Item.Amount) &&
                             Math.Abs(b.Line.Amount) < Math.Abs(ledger.Item.Amount))
                 .Select(b => (Bank: b, Relation: Relation(b, ledger)))
@@ -403,6 +427,13 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
         var score = name is { } n
             ? (0.5 * reference) + (0.2 * n) + (0.2 * amount) + (0.1 * date)
             : (0.65 * reference) + (0.2 * amount) + (0.15 * date);
+
+        // A clearly different counterparty contradicts a merely similar reference ("INV-0323" from one company is
+        // not "INV-0383" of another): halve the score so it cannot pass on reference likeness alone.
+        if (name is < ContradictingName && reference < 1.0)
+        {
+            score *= 0.5;
+        }
         var why = string.Create(
             CultureInfo.InvariantCulture,
             $"reference {reference:0.00}, counterparty {(name is null ? "n/a" : name.Value.ToString("0.00", CultureInfo.InvariantCulture))}, " +
@@ -462,15 +493,17 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
             return 1;
         }
 
+        // A :61: customer reference that fills all 16 characters may have been cut; a ledger reference that starts
+        // with it is very likely the same one. Shorter fields are complete, so a prefix there means nothing.
+        if (bank.TruncatedReferenceKey is { Length: >= 8 } truncated && key.Length > truncated.Length &&
+            key.StartsWith(truncated, StringComparison.Ordinal))
+        {
+            return 0.97;
+        }
+
         var best = 0.0;
         foreach (var window in bank.Windows)
         {
-            if (window.Length >= 10 && key.Length > window.Length && key.StartsWith(window, StringComparison.Ordinal))
-            {
-                // A reference cut at the MT940 16-character limit.
-                best = Math.Max(best, 0.97);
-                continue;
-            }
 
             var ratio = (double)window.Length / key.Length;
             if (window.Length < 4 || ratio < 0.6 || ratio > 1.6)
@@ -641,6 +674,9 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
             Windows = [.. windows];
             TextTokens = tokens.Where(t => !LegalFormTokens.Contains(t)).Distinct(StringComparer.Ordinal).ToArray();
             NameTokens = NameTokensOf(line.CounterpartyName);
+            TruncatedReferenceKey = line.CustomerReference is { Length: MaxCustomerReferenceLength } reference
+                ? TextNormalizer.Key(reference)
+                : null;
         }
 
         public BankLine Line { get; }
@@ -649,6 +685,7 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
         public string[] Windows { get; }
         public string[] TextTokens { get; }
         public string[] NameTokens { get; }
+        public string? TruncatedReferenceKey { get; }
         public bool Used { get; set; }
         public bool Ambiguous { get; set; }
         public List<Candidate> Candidates { get; } = [];

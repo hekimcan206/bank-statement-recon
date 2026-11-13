@@ -107,26 +107,51 @@ public static class Mt940Writer
         }
 
         narrative = options.XCharsetOnly ? SwiftText.ToXCharset(narrative) : narrative;
-        var lineCount = (narrative.Length + NarrativeLineLength - 1) / NarrativeLineLength;
-        if (lineCount > MaxNarrativeLines)
+        var lines = WrapNarrative(narrative);
+        if (lines.Count > MaxNarrativeLines)
         {
-            throw new ArgumentException($"Narrative longer than {MaxNarrativeLines} x {NarrativeLineLength} characters.", nameof(entry));
+            throw new ArgumentException($"Narrative does not fit {MaxNarrativeLines} lines of {NarrativeLineLength} characters.", nameof(entry));
         }
 
-        for (var line = 0; line < lineCount; line++)
+        for (var line = 0; line < lines.Count; line++)
         {
-            var chunk = narrative.Substring(
-                line * NarrativeLineLength,
-                Math.Min(NarrativeLineLength, narrative.Length - (line * NarrativeLineLength)));
-            if (line > 0 && (chunk.StartsWith(':') || chunk.StartsWith('-') || chunk.Trim().Length == 0))
-            {
-                // A continuation line starting with ':' or '-' would be read as a new field or a message end.
-                throw new ArgumentException("Narrative would produce a continuation line the format cannot carry.", nameof(entry));
-            }
-
-            w.WriteLine(line == 0 ? ":86:" + chunk : chunk);
+            w.WriteLine(line == 0 ? ":86:" + lines[line] : lines[line]);
         }
     }
+
+    /// <summary>
+    /// Hard-wraps at 65 characters. A continuation line must not start with ':' (a new field), '-' (end of message)
+    /// or '{' (a block header), so such a break moves left by a character. The reader joins the lines without a
+    /// separator, which makes the move invisible after a round trip.
+    /// </summary>
+    internal static List<string> WrapNarrative(string narrative)
+    {
+        var lines = new List<string>();
+        var position = 0;
+        while (position < narrative.Length)
+        {
+            var length = Math.Min(NarrativeLineLength, narrative.Length - position);
+            while (position + length < narrative.Length && length > 1 && IsUnsafeStart(narrative, position + length))
+            {
+                length--;
+            }
+
+            var line = narrative.Substring(position, length);
+            if (lines.Count > 0 && (IsUnsafeStart(narrative, position) || line.Trim().Length == 0))
+            {
+                throw new ArgumentException("Narrative would produce a continuation line the format cannot carry.", nameof(narrative));
+            }
+
+            lines.Add(line);
+            position += length;
+        }
+
+        return lines;
+    }
+
+    private static bool IsUnsafeStart(string text, int index) =>
+        text[index] is ':' or '-' or '{' || text.AsSpan(index).TrimStart().Length == 0 ||
+        (text[index] == ' ' && text.AsSpan(index, Math.Min(NarrativeLineLength, text.Length - index)).Trim().Length == 0);
 
     /// <summary>When an entry has structured fields but no raw narrative, write them in the SEPA keyword style.</summary>
     private static string? Compose(StatementEntry entry)

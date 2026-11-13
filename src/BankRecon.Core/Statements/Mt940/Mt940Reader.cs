@@ -132,7 +132,7 @@ public static class Mt940Reader
 
     private static bool IsMessageEnd(string content)
     {
-        var trimmed = content.Trim();
+        var trimmed = content.TrimEnd();
         return trimmed is "-" or "-}" or "$" || trimmed.StartsWith("-}", StringComparison.Ordinal);
     }
 

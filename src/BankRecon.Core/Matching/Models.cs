@@ -89,6 +89,18 @@ public sealed record MatchingOptions
 {
     public int DateWindowDays { get; init; } = 5;
 
+    /// <summary>
+    /// Window for one-to-many and many-to-one search. Wider than <see cref="DateWindowDays"/>: a bulk payment
+    /// often settles invoices that fell due on different days, and group members must be related anyway.
+    /// </summary>
+    public int GroupWindowDays { get; init; } = 15;
+
+    /// <summary>Window for the exact-reference rule: the invoice number and the amount together survive a late payment.</summary>
+    public int ReferenceWindowDays { get; init; } = 30;
+
+    /// <summary>Counterparty similarity at which unique amount-per-counterparty is accepted as a match.</summary>
+    public double CounterpartyThreshold { get; init; } = 0.9;
+
     /// <summary>Largest absolute amount difference accepted by the fuzzy rule (deducted transfer charges).</summary>
     public decimal AbsoluteTolerance { get; init; } = 25m;
 
