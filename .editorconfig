@@ -75,5 +75,5 @@ dotnet_diagnostic.CA1515.severity = none
 dotnet_diagnostic.CA1822.severity = none
 
 [{benchmarks/**.cs,src/BankRecon.Synthetic/**.cs,tests/**.cs}]
-# Synthetic statements are generated with System.Random on purpose: reproducible per seed, not a security decision.
+# Synthetic statements use System.Random on purpose: reproducible per seed, not a security decision.
 dotnet_diagnostic.CA5394.severity = none
