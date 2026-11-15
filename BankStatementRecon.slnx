@@ -5,6 +5,7 @@
     <Project Path="src/BankRecon.Synthetic/BankRecon.Synthetic.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/BankRecon.IntegrationTests/BankRecon.IntegrationTests.csproj" />
     <Project Path="tests/BankRecon.UnitTests/BankRecon.UnitTests.csproj" />
   </Folder>
 </Solution>
