@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "BankRecon.Api": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5180",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings__Default": "Host=localhost;Port=58632;Database=recon;Username=recon_app;Password=app-dev-only",
+        "OpenApi__Enabled": "true"
+      }
+    }
+  }
+}

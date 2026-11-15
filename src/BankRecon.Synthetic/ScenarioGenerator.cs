@@ -472,7 +472,7 @@ public sealed class ScenarioGenerator
     /// <summary>Bank-side rendering of a name: upper case, sometimes transliterated or cut at 35 characters.</summary>
     private string BankName(Customer customer)
     {
-        var name = customer.Name.ToUpper(CultureInfo.GetCultureInfo("tr-TR"));
+        var name = TurkishUpper(customer.Name);
         if (!_options.TurkishLetters || _random.NextDouble() < 0.4)
         {
             name = Core.Statements.Mt940.SwiftText.ToXCharset(name);
@@ -525,6 +525,11 @@ public sealed class ScenarioGenerator
     private void Truth(string kind, List<Planned> entries, List<string> ledger) => _truth.Add((kind, entries, [], ledger));
 
     private T Pick<T>(IReadOnlyList<T> values) => values[_random.Next(values.Count)];
+
+    // Turkish upper-casing without a culture lookup (i -> İ, ı -> I): the API image runs with invariant globalization,
+    // where CultureInfo("tr-TR") is not available.
+    private static string TurkishUpper(string value) =>
+        string.Concat(value.Select(c => c switch { 'i' => 'İ', 'ı' => 'I', _ => char.ToUpperInvariant(c) }));
 
     private static string FirstWord(string name) => name.Split(' ')[0];
 
