@@ -1,0 +1,78 @@
+# `docker compose up` runs the whole demo with zero manual steps:
+#   postgres  -> initialised with least-privilege roles (deploy/postgres/init)
+#   migrator  -> same image, `--migrate-only`, connects as the schema owner, exits
+#   seed      -> same image, `--seed-demo`, connects as the application role: generates two synthetic accounts
+#                (MT940 with Turkish free-text narratives, camt.053.001.08), imports ledger and statements and runs
+#                reconciliation, then exits (idempotent: re-running books nothing twice)
+#   api       -> connects as the application role, serves the API and the Scalar UI on http://localhost:58680/scalar
+name: bank-statement-recon
+
+x-api-image: &api-image
+  image: bank-statement-recon-api:local
+  build:
+    context: .
+    dockerfile: Dockerfile
+
+x-app-connection: &app-connection
+  ConnectionStrings__Default: Host=postgres;Database=recon;Username=recon_app;Password=${APP_PASSWORD:-app-dev-only};Timeout=15
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: recon
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres-dev-only}
+      MIGRATOR_PASSWORD: ${MIGRATOR_PASSWORD:-migrator-dev-only}
+      APP_PASSWORD: ${APP_PASSWORD:-app-dev-only}
+    ports:
+      # Loopback only: lets `dotnet run` (launchSettings.json) and psql use this database.
+      - "127.0.0.1:${POSTGRES_PORT:-58632}:5432"
+    volumes:
+      - ./deploy/postgres/init:/docker-entrypoint-initdb.d:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d recon"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  migrator:
+    <<: *api-image
+    command: ["--migrate-only"]
+    environment:
+      ConnectionStrings__Default: Host=postgres;Database=recon;Username=recon_migrator;Password=${MIGRATOR_PASSWORD:-migrator-dev-only}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  seed:
+    <<: *api-image
+    command: ["--seed-demo"]
+    environment:
+      <<: *app-connection
+      Serilog__MinimumLevel__Default: Warning
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    restart: "no"
+
+  api:
+    <<: *api-image
+    ports:
+      - "127.0.0.1:${API_PORT:-58680}:8080"
+    environment:
+      <<: *app-connection
+      Api__Keys: ${API_KEYS:-demo-key-dev-only}
+      OpenApi__Enabled: "true"
+      OTEL_SERVICE_NAME: bank-statement-recon-api
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    # No container HEALTHCHECK: the chiseled image has no shell or curl. Probe /health/live and /health/ready over HTTP.
+    restart: unless-stopped
+
+volumes:
+  pgdata:

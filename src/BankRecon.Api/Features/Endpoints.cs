@@ -16,7 +16,6 @@ internal static class Endpoints
     {
         api.MapPost("/statements", ImportStatementAsync)
             .WithSummary("Import an MT940 or camt.053 file (raw request body). The same bytes twice are reported as a duplicate.")
-            .Accepts<string>("text/plain", "application/xml", "application/octet-stream")
             .Produces<ImportResult>(StatusCodes.Status201Created)
             .Produces<ImportResult>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status409Conflict)
@@ -42,6 +41,8 @@ internal static class Endpoints
         return api;
     }
 
+    // No Accepts<> metadata on purpose: it would make ASP.NET Core answer 415 to `curl --data-binary` (form content
+    // type) and to bank tools that send arbitrary content types. The format is detected from the bytes instead.
     private static async Task<IResult> ImportStatementAsync(HttpContext context, StatementImporter importer, [FromQuery] string? fileName, CancellationToken cancellationToken)
     {
         var sizeFeature = context.Features.Get<IHttpMaxRequestBodySizeFeature>();

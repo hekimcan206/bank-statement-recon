@@ -1,0 +1,155 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
+jobs:
+  build-test:
+    name: build & test
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v6
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props', '**/*.csproj', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Restore
+        run: dotnet restore
+
+      # Package versions are pinned and updated by hand, so a known vulnerability in any direct or
+      # transitive package fails the build. Fix it with a pinned upgrade in Directory.Packages.props.
+      - name: Audit for vulnerable packages
+        run: |
+          set -o pipefail
+          dotnet list package --vulnerable --include-transitive 2>&1 | tee vulnerable-packages.txt
+          if grep -q "has the following vulnerable packages" vulnerable-packages.txt; then
+            echo "::error::Known-vulnerable NuGet packages found (see the list above)"
+            exit 1
+          fi
+
+      - name: Format check
+        run: dotnet format --verify-no-changes --no-restore
+
+      - name: Build (warnings are errors)
+        run: dotnet build --no-restore --configuration Release
+
+      # Unit, FsCheck property, golden and fuzz tests, then integration tests against PostgreSQL 17 started through
+      # Testcontainers on the runner's Docker engine.
+      - name: Test
+        run: >
+          dotnet test --no-build --configuration Release
+          --coverage --coverage-output-format cobertura
+          --results-directory "${{ github.workspace }}/TestResults"
+
+      - name: Coverage summary
+        if: always()
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.12
+        with:
+          reports: TestResults/**/*.cobertura.xml
+          targetdir: coverage
+          reporttypes: MarkdownSummaryGithub
+          assemblyfilters: "-*Tests*;-BankRecon.Lab"
+          filefilters: "-*/obj/*"
+
+      - name: Publish coverage to job summary
+        if: always()
+        run: |
+          if [ -f coverage/SummaryGithub.md ]; then
+            cat coverage/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No coverage report produced."
+          fi
+
+      # The lab is deterministic per seed; a short run keeps it compiling and running.
+      - name: Accuracy lab smoke run
+        run: dotnet run --no-build --configuration Release --project benchmarks/BankRecon.Lab -- accuracy 1 300
+        env:
+          LAB_OUTPUT: ${{ runner.temp }}/lab
+
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: test-results
+          path: TestResults/
+          retention-days: 7
+
+  compose-demo:
+    name: docker compose demo
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      API: http://127.0.0.1:58680/api/v1
+      KEY: "X-Api-Key: demo-key-dev-only"
+    steps:
+      - uses: actions/checkout@v7
+
+      # The README promises `docker compose up` runs the whole demo with zero manual steps; this job keeps it true.
+      - name: Start the stack
+        run: docker compose up -d --build
+
+      - name: The seed imports both accounts and reconciles them
+        run: |
+          test "$(docker wait bank-statement-recon-seed-1)" = "0" || { docker compose logs seed; exit 1; }
+          docker compose logs --no-log-prefix seed | tail -1 | tee seed.json
+          test "$(grep -o '"duplicateFile":false' seed.json | wc -l)" -eq 2
+          grep -q '"ExactReference":' seed.json
+          grep -q '"ManyToOne":' seed.json
+          for i in $(seq 1 60); do curl -fsS http://127.0.0.1:58680/health/ready && break; sleep 2; done
+          curl -fsS http://127.0.0.1:58680/health/ready
+
+      - name: The API requires the key and reports the account
+        run: |
+          account=$(grep -o '"account":"TR[0-9]*"' seed.json | head -1 | cut -d'"' -f4)
+          echo "ACCOUNT=${account}" >> "$GITHUB_ENV"
+          test "$(curl -s -o /dev/null -w '%{http_code}' "$API/accounts/${account}/summary")" = "401"
+          curl -fsS -H "$KEY" "$API/accounts/${account}/summary" | tee summary.json
+          grep -q '"open":[1-9]' summary.json
+
+      - name: A worker claims, a stale token is fenced out, the holder resolves
+        run: |
+          item=$(curl -fsS -H "$KEY" -H 'Content-Type: application/json' -d "{\"workerId\":\"ci\",\"account\":\"$ACCOUNT\"}" "$API/work-items/claim")
+          id=$(echo "$item" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+          token=$(echo "$item" | grep -o '"leaseToken":[0-9]*' | cut -d: -f2)
+          body() { echo "{\"workerId\":\"ci\",\"leaseToken\":$1,\"action\":\"write-off\",\"note\":\"compose demo\"}"; }
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H "$KEY" -H 'Content-Type: application/json' -d "$(body $((token - 1)))" "$API/work-items/$id/resolve")" = "409"
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H "$KEY" -H 'Content-Type: application/json' -d "$(body "$token")" "$API/work-items/$id/resolve")" = "200"
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H "$KEY" -H 'Content-Type: application/json' -d "$(body "$token")" "$API/work-items/$id/resolve")" = "409"
+
+      - name: Uploads are idempotent and malformed files are rejected
+        run: |
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H "$KEY" --data-binary @samples/camt053-v02.xml "$API/statements")" = "201"
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H "$KEY" --data-binary @samples/camt053-v02.xml "$API/statements")" = "200"
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H "$KEY" --data-binary 'not a statement' "$API/statements")" = "422"
+
+      - name: Re-running the seed books nothing twice
+        run: |
+          docker compose run --rm seed | tail -1 | tee seed-again.json
+          test "$(grep -o '"duplicateFile":true' seed-again.json | wc -l)" -eq 2
+          test "$(grep -o '"matches":0' seed-again.json | wc -l)" -eq 2
+
+      - name: Logs on failure
+        if: failure()
+        run: docker compose logs
