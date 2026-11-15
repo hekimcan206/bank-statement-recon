@@ -212,6 +212,21 @@ public sealed class MatchingEngineTests
         }
     }
 
+    [Property(MaxTest = 30)]
+    public void Matching_the_leftovers_again_finds_nothing_new(int seed)
+    {
+        // A reconciliation run re-matches every open item; it must be idempotent.
+        var scenario = ScenarioGenerator.Generate(new ScenarioOptions { Seed = Math.Abs(seed % 10_000) + 1, LedgerItems = 200, Style = (NarrativeStyle)(Math.Abs(seed) % 4) });
+        var lines = scenario.BankLines();
+        var first = new MatchingEngine().Match(lines, scenario.Ledger);
+        var openBanks = first.UnmatchedBankLines.Select(u => u.Id).ToHashSet();
+        var openLedger = first.UnmatchedLedgerItems.Select(u => u.Id).ToHashSet();
+
+        var second = new MatchingEngine().Match(lines.Where(l => openBanks.Contains(l.Id)).ToList(), scenario.Ledger.Where(l => openLedger.Contains(l.Id)).ToList());
+
+        second.Matches.Should().BeEmpty();
+    }
+
     [Property(MaxTest = 20)]
     public void The_result_does_not_depend_on_input_order(int seed)
     {

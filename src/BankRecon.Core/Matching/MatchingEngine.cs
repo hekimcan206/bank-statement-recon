@@ -23,6 +23,7 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
 
     private const int MaxCustomerReferenceLength = 16;
     private const double ContradictingName = 0.3;
+    private const int MaxIterations = 10;
 
     private readonly MatchingOptions _options = options ?? new MatchingOptions();
 
@@ -39,22 +40,36 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
             .Select((l, i) => new LedgerSide(l, i)).ToArray();
         var run = new Run(banks, ledgers);
 
-        if (_options.ExactReference)
+        // Passes repeat until nothing new matches. Every rule is defined over the items still open, so a match made by
+        // a later pass can make an earlier rule applicable (a second open item with the same amount is gone). Without
+        // the repetition, running the engine again on its own leftovers would find more, and a reconciliation run
+        // would not be idempotent.
+        for (var iteration = 0; iteration < MaxIterations; iteration++)
         {
-            ExactReferencePass(run);
-        }
+            var before = run.Matches.Count;
+            run.ResetEvidence();
+            if (_options.ExactReference)
+            {
+                ExactReferencePass(run);
+            }
 
-        if (_options.AmountDate)
-        {
-            AmountDatePass(run);
-        }
+            if (_options.AmountDate)
+            {
+                AmountDatePass(run);
+            }
 
-        FuzzyPass(run);
+            FuzzyPass(run);
 
-        if (_options.Groups)
-        {
-            ManyToOnePass(run);
-            OneToManyPass(run);
+            if (_options.Groups)
+            {
+                ManyToOnePass(run);
+                OneToManyPass(run);
+            }
+
+            if (run.Matches.Count == before)
+            {
+                break;
+            }
         }
 
         return Build(run);
@@ -64,6 +79,11 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
     {
         foreach (var bank in run.Banks)
         {
+            if (bank.Used)
+            {
+                continue;
+            }
+
             LedgerSide? best = null;
             var bestDays = int.MaxValue;
             var tie = false;
@@ -727,6 +747,22 @@ public sealed class MatchingEngine(MatchingOptions? options = null)
         public BankSide[] Banks { get; }
         public LedgerSide[] Ledgers { get; }
         public List<Match> Matches { get; } = [];
+
+        /// <summary>Candidates and ambiguity flags describe one pass over the open items; each iteration starts afresh.</summary>
+        public void ResetEvidence()
+        {
+            foreach (var bank in Banks)
+            {
+                bank.Candidates.Clear();
+                bank.Ambiguous = false;
+            }
+
+            foreach (var ledger in Ledgers)
+            {
+                ledger.Candidates.Clear();
+                ledger.Ambiguous = false;
+            }
+        }
 
         public bool BankUsed(string id) => _bankById[id].Used;
         public bool LedgerUsed(string id) => _ledgerById[id].Used;
