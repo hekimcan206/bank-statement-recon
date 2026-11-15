@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/BankRecon.Lab/BankRecon.Lab.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/BankRecon.Api/BankRecon.Api.csproj" />
     <Project Path="src/BankRecon.Core/BankRecon.Core.csproj" />

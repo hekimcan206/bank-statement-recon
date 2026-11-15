@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <Description>Measurement lab: parse throughput, matching precision/recall and throughput, import and work-queue drain on PostgreSQL.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Testcontainers.PostgreSql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BankRecon.Core\BankRecon.Core.csproj" />
+    <ProjectReference Include="..\..\src\BankRecon.Synthetic\BankRecon.Synthetic.csproj" />
+    <ProjectReference Include="..\..\src\BankRecon.Api\BankRecon.Api.csproj" />
+  </ItemGroup>
+
+</Project>

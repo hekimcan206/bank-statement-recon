@@ -1,0 +1,69 @@
+{
+  "importRows": [
+    {
+      "size": 2000,
+      "Lines": 1569,
+      "ledgerMedian": 189.7504,
+      "importMs": 177.4751,
+      "runMedian": 4176.8685,
+      "Matches": 1335,
+      "Queued": 543
+    },
+    {
+      "size": 5000,
+      "Lines": 4100,
+      "ledgerMedian": 327.1255,
+      "importMs": 291.0331,
+      "runMedian": 19672.0054,
+      "Matches": 3441,
+      "Queued": 1238
+    },
+    {
+      "size": 10000,
+      "Lines": 8140,
+      "ledgerMedian": 645.319,
+      "importMs": 507.0446,
+      "runMedian": 44537.1131,
+      "Matches": 6496,
+      "Queued": 3784
+    }
+  ],
+  "queueRows": [
+    {
+      "workers": 1,
+      "items": 2933,
+      "seconds": 91.9491361,
+      "doubles": 0,
+      "exactlyOnce": true
+    },
+    {
+      "workers": 2,
+      "items": 2888,
+      "seconds": 30.693685,
+      "doubles": 0,
+      "exactlyOnce": true
+    },
+    {
+      "workers": 4,
+      "items": 2837,
+      "seconds": 16.8286242,
+      "doubles": 0,
+      "exactlyOnce": true
+    },
+    {
+      "workers": 8,
+      "items": 2816,
+      "seconds": 13.9051084,
+      "doubles": 0,
+      "exactlyOnce": true
+    },
+    {
+      "workers": 16,
+      "items": 2857,
+      "seconds": 9.0209935,
+      "doubles": 0,
+      "exactlyOnce": true
+    }
+  ],
+  "crash": {}
+}

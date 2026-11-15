@@ -1,0 +1,242 @@
+[
+  {
+    "Format": "MT940, Turkish free-text :86:",
+    "Configuration": "amount \u002B date window, first fit (baseline)",
+    "Precision": 0.642159833674338,
+    "PrecisionMin": 0.6151631477927063,
+    "Recall": 0.3888973063973064,
+    "RecallMin": 0.35626398210290827,
+    "F1": 0.48560700501938703,
+    "QueueShare": 0.40860334227281847
+  },
+  {
+    "Format": "MT940, Turkish free-text :86:",
+    "Configuration": "exact reference only",
+    "Precision": 1,
+    "PrecisionMin": 0.9987293519695044,
+    "Recall": 0.4340592101480254,
+    "RecallMin": 0.4063745019920319,
+    "F1": 0.6053561388633096,
+    "QueueShare": 0.5744049248340231
+  },
+  {
+    "Format": "MT940, Turkish free-text :86:",
+    "Configuration": "\u002B unique amount/date",
+    "Precision": 0.9989837251505573,
+    "PrecisionMin": 0.9970845481049563,
+    "Recall": 0.5775930735930737,
+    "RecallMin": 0.5425055928411633,
+    "F1": 0.7315890239074723,
+    "QueueShare": 0.43303948292638916
+  },
+  {
+    "Format": "MT940, Turkish free-text :86:",
+    "Configuration": "\u002B fuzzy (Jaro-Winkler, token set)",
+    "Precision": 0.998690180297471,
+    "PrecisionMin": 0.9973544973544973,
+    "Recall": 0.6396257816257817,
+    "RecallMin": 0.6055776892430279,
+    "F1": 0.7795267489711935,
+    "QueueShare": 0.37057679109877245
+  },
+  {
+    "Format": "MT940, Turkish free-text :86:",
+    "Configuration": "\u002B one-to-many / many-to-one (full)",
+    "Precision": 0.9988452344084142,
+    "PrecisionMin": 0.9959654178674352,
+    "Recall": 0.9791097541378756,
+    "RecallMin": 0.9725950782997763,
+    "F1": 0.988365800865801,
+    "QueueShare": 0.1458417737021856
+  },
+  {
+    "Format": "MT940, Turkish free-text :86:",
+    "Configuration": "full, no ambiguity guard",
+    "Precision": 0.9988361863754232,
+    "PrecisionMin": 0.9959677419354839,
+    "Recall": 0.9799387299756185,
+    "RecallMin": 0.9737136465324385,
+    "F1": 0.9886405359079069,
+    "QueueShare": 0.14444870537547883
+  },
+  {
+    "Format": "MT940, GVC ?NN subfields",
+    "Configuration": "amount \u002B date window, first fit (baseline)",
+    "Precision": 0.6520396503594278,
+    "PrecisionMin": 0.6233062330623306,
+    "Recall": 0.39124050329765214,
+    "RecallMin": 0.36122102882984736,
+    "F1": 0.48519918580982846,
+    "QueueShare": 0.4004781340345094
+  },
+  {
+    "Format": "MT940, GVC ?NN subfields",
+    "Configuration": "exact reference only",
+    "Precision": 1,
+    "PrecisionMin": 1,
+    "Recall": 0.4394690821567383,
+    "RecallMin": 0.38849701573521433,
+    "F1": 0.6105975733396338,
+    "QueueShare": 0.5682913170004391
+  },
+  {
+    "Format": "MT940, GVC ?NN subfields",
+    "Configuration": "\u002B unique amount/date",
+    "Precision": 0.9990614633596353,
+    "PrecisionMin": 0.9971153846153846,
+    "Recall": 0.58273143274273,
+    "RecallMin": 0.530113944655453,
+    "F1": 0.7359720607084034,
+    "QueueShare": 0.42462562618152055
+  },
+  {
+    "Format": "MT940, GVC ?NN subfields",
+    "Configuration": "\u002B fuzzy (Jaro-Winkler, token set)",
+    "Precision": 0.9991582008456255,
+    "PrecisionMin": 0.9965870307167235,
+    "Recall": 0.6486976555866586,
+    "RecallMin": 0.5908844275637547,
+    "F1": 0.7865199221461041,
+    "QueueShare": 0.35944664409908017
+  },
+  {
+    "Format": "MT940, GVC ?NN subfields",
+    "Configuration": "\u002B one-to-many / many-to-one (full)",
+    "Precision": 0.9988401826115496,
+    "PrecisionMin": 0.9944536882972823,
+    "Recall": 0.9811592469962126,
+    "RecallMin": 0.9716874292185731,
+    "F1": 0.9896678547448944,
+    "QueueShare": 0.13979306602992836
+  },
+  {
+    "Format": "MT940, GVC ?NN subfields",
+    "Configuration": "full, no ambiguity guard",
+    "Precision": 0.9988304077567904,
+    "PrecisionMin": 0.9944536882972823,
+    "Recall": 0.9819310893220555,
+    "RecallMin": 0.9728703201302225,
+    "F1": 0.9900984742647162,
+    "QueueShare": 0.13897264403544846
+  },
+  {
+    "Format": "MT940, SEPA /KEY/ :86:",
+    "Configuration": "amount \u002B date window, first fit (baseline)",
+    "Precision": 0.6520396503594278,
+    "PrecisionMin": 0.6233062330623306,
+    "Recall": 0.39124050329765214,
+    "RecallMin": 0.36122102882984736,
+    "F1": 0.48519918580982846,
+    "QueueShare": 0.4004781340345094
+  },
+  {
+    "Format": "MT940, SEPA /KEY/ :86:",
+    "Configuration": "exact reference only",
+    "Precision": 1,
+    "PrecisionMin": 1,
+    "Recall": 0.4394690821567383,
+    "RecallMin": 0.38849701573521433,
+    "F1": 0.6105975733396338,
+    "QueueShare": 0.5682913170004391
+  },
+  {
+    "Format": "MT940, SEPA /KEY/ :86:",
+    "Configuration": "\u002B unique amount/date",
+    "Precision": 0.9990605866457692,
+    "PrecisionMin": 0.9971291866028709,
+    "Recall": 0.5855169558437947,
+    "RecallMin": 0.5313736574335783,
+    "F1": 0.7381916008057962,
+    "QueueShare": 0.4224296968076856
+  },
+  {
+    "Format": "MT940, SEPA /KEY/ :86:",
+    "Configuration": "\u002B fuzzy (Jaro-Winkler, token set)",
+    "Precision": 0.9991500088141883,
+    "PrecisionMin": 0.9965986394557823,
+    "Recall": 0.650653620867456,
+    "RecallMin": 0.5914270211611503,
+    "F1": 0.787957278979563,
+    "QueueShare": 0.3577984782330198
+  },
+  {
+    "Format": "MT940, SEPA /KEY/ :86:",
+    "Configuration": "\u002B one-to-many / many-to-one (full)",
+    "Precision": 0.9985776432537414,
+    "PrecisionMin": 0.9944567627494457,
+    "Recall": 0.9826396450348432,
+    "RecallMin": 0.9733861834654587,
+    "F1": 0.9905230048730282,
+    "QueueShare": 0.137879445172447
+  },
+  {
+    "Format": "MT940, SEPA /KEY/ :86:",
+    "Configuration": "full, no ambiguity guard",
+    "Precision": 0.9983131264717264,
+    "PrecisionMin": 0.9944567627494457,
+    "Recall": 0.9835390919988158,
+    "RecallMin": 0.9734129137276181,
+    "F1": 0.9908142323835653,
+    "QueueShare": 0.13708523061798816
+  },
+  {
+    "Format": "camt.053.001.08",
+    "Configuration": "amount \u002B date window, first fit (baseline)",
+    "Precision": 0.6896645229914417,
+    "PrecisionMin": 0.6669535283993115,
+    "Recall": 0.4677073855553159,
+    "RecallMin": 0.43909348441926344,
+    "F1": 0.557459418499975,
+    "QueueShare": 0.3564697102237287
+  },
+  {
+    "Format": "camt.053.001.08",
+    "Configuration": "exact reference only",
+    "Precision": 1,
+    "PrecisionMin": 1,
+    "Recall": 0.5507232088296994,
+    "RecallMin": 0.5297450424929179,
+    "F1": 0.7102707200137484,
+    "QueueShare": 0.47667685028832874
+  },
+  {
+    "Format": "camt.053.001.08",
+    "Configuration": "\u002B unique amount/date",
+    "Precision": 1,
+    "PrecisionMin": 0.998286203941731,
+    "Recall": 0.6940123971263313,
+    "RecallMin": 0.660056657223796,
+    "F1": 0.8193703271170789,
+    "QueueShare": 0.342974471032366
+  },
+  {
+    "Format": "camt.053.001.08",
+    "Configuration": "\u002B fuzzy (Jaro-Winkler, token set)",
+    "Precision": 1,
+    "PrecisionMin": 0.9984591679506933,
+    "Recall": 0.7553390933838324,
+    "RecallMin": 0.7342776203966006,
+    "F1": 0.8606188163537737,
+    "QueueShare": 0.2830643003907075
+  },
+  {
+    "Format": "camt.053.001.08",
+    "Configuration": "\u002B one-to-many / many-to-one (full)",
+    "Precision": 0.9988518909691866,
+    "PrecisionMin": 0.9960159362549801,
+    "Recall": 0.9880534512629359,
+    "RecallMin": 0.9764705882352941,
+    "F1": 0.9931579554992527,
+    "QueueShare": 0.131747425215205
+  },
+  {
+    "Format": "camt.053.001.08",
+    "Configuration": "full, no ambiguity guard",
+    "Precision": 0.9988535283003368,
+    "PrecisionMin": 0.9960204661739624,
+    "Recall": 0.9888854231970081,
+    "RecallMin": 0.9792717086834734,
+    "F1": 0.993578785440664,
+    "QueueShare": 0.1309396796683909
+  }
+]

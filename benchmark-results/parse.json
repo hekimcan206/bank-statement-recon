@@ -1,0 +1,54 @@
+[
+  {
+    "Format": "MT940 (Turkish free text)",
+    "Mode": "streaming",
+    "FileMb": 57.95654010772705,
+    "Entries": 500000,
+    "Seconds": 0.519938,
+    "MinSeconds": 0.498034,
+    "MaxSeconds": 0.9292182,
+    "MbPerSecond": 111.46817525883289,
+    "EntriesPerSecond": 961653.1201797137,
+    "BytesPerEntry": 1593,
+    "PeakHeapMb": 12.483848571777344
+  },
+  {
+    "Format": "MT940 (Turkish free text)",
+    "Mode": "buffered (ToStatements, 1 run)",
+    "FileMb": 57.95654010772705,
+    "Entries": 500000,
+    "Seconds": 2.1381351,
+    "MinSeconds": 2.1381351,
+    "MaxSeconds": 2.1381351,
+    "MbPerSecond": 27.10611696507253,
+    "EntriesPerSecond": 233848.64688858998,
+    "BytesPerEntry": 1620,
+    "PeakHeapMb": 195.47693634033203
+  },
+  {
+    "Format": "camt.053.001.08",
+    "Mode": "streaming",
+    "FileMb": 166.57290935516357,
+    "Entries": 150000,
+    "Seconds": 1.8075961,
+    "MinSeconds": 1.4957741,
+    "MaxSeconds": 2.4474654,
+    "MbPerSecond": 92.1516202403643,
+    "EntriesPerSecond": 82983.13987289528,
+    "BytesPerEntry": 6110,
+    "PeakHeapMb": 12.176185607910156
+  },
+  {
+    "Format": "camt.053.001.08",
+    "Mode": "buffered (ToStatements, 1 run)",
+    "FileMb": 166.57290935516357,
+    "Entries": 150000,
+    "Seconds": 2.3195897,
+    "MinSeconds": 2.3195897,
+    "MaxSeconds": 2.3195897,
+    "MbPerSecond": 71.81136791354245,
+    "EntriesPerSecond": 64666.60892657008,
+    "BytesPerEntry": 6138,
+    "PeakHeapMb": 85.27103424072266
+  }
+]

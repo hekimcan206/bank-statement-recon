@@ -1,0 +1,46 @@
+[
+  {
+    "LedgerItems": 1000,
+    "BankLines": 851,
+    "Days": 20,
+    "MedianMs": 237.4066,
+    "MinMs": 187.1092,
+    "MaxMs": 279.9693,
+    "ItemsPerSecond": 7796.750385204118,
+    "Precision": 0.9988888888888889,
+    "Recall": 0.986827661909989
+  },
+  {
+    "LedgerItems": 5000,
+    "BankLines": 4080,
+    "Days": 20,
+    "MedianMs": 2887.5559,
+    "MinMs": 2732.8574,
+    "MaxMs": 2944.2554,
+    "ItemsPerSecond": 3144.5278687072346,
+    "Precision": 0.996345363179534,
+    "Recall": 0.9775885253249664
+  },
+  {
+    "LedgerItems": 10000,
+    "BankLines": 8164,
+    "Days": 40,
+    "MedianMs": 11435.9003,
+    "MinMs": 11407.1394,
+    "MaxMs": 13310.3568,
+    "ItemsPerSecond": 1588.331440769906,
+    "Precision": 0.9795239314051702,
+    "Recall": 0.8549089690606501
+  },
+  {
+    "LedgerItems": 20000,
+    "BankLines": 16246,
+    "Days": 80,
+    "MedianMs": 37805.085,
+    "MinMs": 32513.4207,
+    "MaxMs": 75915.1122,
+    "ItemsPerSecond": 958.7599128529932,
+    "Precision": 0.9661519371294637,
+    "Recall": 0.7848462787702302
+  }
+]
